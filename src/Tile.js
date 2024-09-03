@@ -3,6 +3,8 @@ class Tile {
       this.x = x;
       this.y = y;
       this.size = size;
+
+      this.isMined = false;
    }
 
    draw(p) {
@@ -17,6 +19,10 @@ class Tile {
 
       p.textAlign(p.CENTER, p.CENTER);
       p.text(this.x / this.size + "," + this.y / this.size, textX, textY);
+   }
+
+   mine() {
+      this.isMined = true;
    }
 }
 

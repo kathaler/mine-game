@@ -1,8 +1,7 @@
 class Player {
-  constructor(GRID_SIZE, SPEED, GRID) {
+  constructor(GRID_SIZE, SPEED) {
     this.GRID_SIZE = GRID_SIZE;
     this.SPEED = SPEED;
-    this.GRID = GRID;
 
     this.position = { x: 10*GRID_SIZE, y: 10*GRID_SIZE };
     this.targetPosition = { x: 10*GRID_SIZE, y: 10*GRID_SIZE };
