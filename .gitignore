@@ -28,7 +28,6 @@ jspm_packages/
 
 # Other
 .DS_Store
-.babelrc
 
 # Webpack specific
 .cache/

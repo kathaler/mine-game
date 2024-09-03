@@ -1,11 +1,13 @@
 class Player {
-  constructor(GRID_SIZE, SPEED) {
+  constructor(GRID_SIZE, SPEED, GRID) {
     this.GRID_SIZE = GRID_SIZE;
     this.SPEED = SPEED;
+    this.GRID = GRID;
 
     this.position = { x: 10*GRID_SIZE, y: 10*GRID_SIZE };
     this.targetPosition = { x: 10*GRID_SIZE, y: 10*GRID_SIZE };
     this.moveDirection = { x: 0, y: 0 };
+    this.playerSize = GRID_SIZE/2;
   }
 
   isCenteredOnGrid() {
@@ -36,7 +38,7 @@ class Player {
 
   draw(p) {
     p.fill(255, 204, 0);
-    p.square(this.position.x, this.position.y, this.GRID_SIZE);
+    p.square(this.position.x + this.playerSize/2, this.position.y + this.playerSize/2, this.playerSize);
   }
 
   handleKeyPressed(p) {
