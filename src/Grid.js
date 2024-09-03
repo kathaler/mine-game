@@ -8,10 +8,10 @@ class Grid {
 
   generateGrid(width, height) {
     // Generate the grid only once
-    const startX = this.PLAYER.position.x - 4 * this.GRID_SIZE;
-    const endX = this.PLAYER.position.x + 4 * this.GRID_SIZE;
-    const startY = this.PLAYER.position.y - 4 * this.GRID_SIZE;
-    const endY = this.PLAYER.position.y + 4 * this.GRID_SIZE;
+    const startX = this.PLAYER.position.x - 2 * this.GRID_SIZE;
+    const endX = this.PLAYER.position.x + 2 * this.GRID_SIZE;
+    const startY = this.PLAYER.position.y - 2 * this.GRID_SIZE;
+    const endY = this.PLAYER.position.y + 2 * this.GRID_SIZE;
 
     for (let x = 0; x <= width; x += this.GRID_SIZE) {
       for (let y = 0; y <= height; y += this.GRID_SIZE) {
