@@ -8,7 +8,6 @@ class Player {
     this.moveDirection = { x: 0, y: 0 };
     this.moving = false;
     this.keysReleased = false;
-    this.lastKeys = [];
   }
 
   update(p) {
