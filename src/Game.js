@@ -10,7 +10,7 @@ class Game {
      this.SPEED = SPEED;
  
      this.player = new Player(GRID_SIZE, SPEED);
-     this.grid = new Grid(GRID_SIZE);
+     this.grid = new Grid(GRID_SIZE, this.player);
  
      // Camera position and target position
      this.cameraPosition = { x: 0, y: 0 };
@@ -21,6 +21,7 @@ class Game {
    setup(p) {
      p.createCanvas(this.GAME_WIDTH, this.GAME_HEIGHT);
      p.background(135, 206, 235);
+     this.grid.generateGrid(this.GAME_WIDTH, this.GAME_HEIGHT);
    }
  
    windowResized(p) {
@@ -42,6 +43,8 @@ class Game {
  
      // Apply camera translation
      p.translate(-this.cameraPosition.x, -this.cameraPosition.y);
+
+     this.grid.updateGrid();
  
      // Draw the grid and player with the camera translation applied
      this.grid.drawGrid(p, this.GAME_WIDTH, this.GAME_HEIGHT);
