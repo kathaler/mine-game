@@ -11,7 +11,7 @@ const App = () => {
       const GAME_WIDTH = window.innerWidth;
       const GAME_HEIGHT = window.innerHeight;
       const GRID_SIZE = 64;
-      const SPEED = 8;
+      const SPEED = 6;
 
       const game = new Game(GAME_WIDTH, GAME_HEIGHT, GRID_SIZE, SPEED);
 
