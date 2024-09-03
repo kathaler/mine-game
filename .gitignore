@@ -1,0 +1,38 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build files
+dist/
+build/
+
+# Dependency directories
+jspm_packages/
+
+# Compiled files
+*.log
+*.tsbuildinfo
+
+# IDEs and editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Optional npm cache directory
+.npm/
+
+# Other
+.DS_Store
+.babelrc
+
+# Webpack specific
+.cache/
+.cache-loader/
+
+# Local environment variables
+.env
