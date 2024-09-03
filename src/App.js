@@ -2,14 +2,15 @@
 import React, { useEffect, useRef } from "react";
 import p5 from "p5";
 import Game from "./Game";
+import "./styles.css";
 
 const App = () => {
   const sketchRef = useRef(null);
 
   useEffect(() => {
     const sketch = (p) => {
-      const GAME_WIDTH = window.innerWidth;
-      const GAME_HEIGHT = window.innerHeight;
+      const GAME_WIDTH = document.documentElement.clientWidth;
+      const GAME_HEIGHT = document.documentElement.clientHeight;
       const GRID_SIZE = 64;
       const SPEED = 8;
 
@@ -28,7 +29,7 @@ const App = () => {
     };
   }, []);
 
-  return <div ref={sketchRef}></div>;
+  return <div ref={sketchRef} id="sketch-container"></div>;
 };
 
 export default App;
