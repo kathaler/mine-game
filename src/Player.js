@@ -3,10 +3,9 @@ class Player {
     this.GRID_SIZE = GRID_SIZE;
     this.SPEED = SPEED;
 
-    this.position = { x: 0, y: 0 };
-    this.targetPosition = { x: 0, y: 0 };
+    this.position = { x: 10*GRID_SIZE, y: 10*GRID_SIZE };
+    this.targetPosition = { x: 10*GRID_SIZE, y: 10*GRID_SIZE };
     this.moveDirection = { x: 0, y: 0 };
-    this.moving = false;
   }
 
   isCenteredOnGrid() {
@@ -24,7 +23,6 @@ class Player {
     if (distance < this.SPEED) {
       this.position.x = this.targetPosition.x;
       this.position.y = this.targetPosition.y;
-      this.moving = false;
 
       // If centered and no ongoing movement, apply the new direction
       if (
@@ -66,7 +64,6 @@ class Player {
         this.position.x + this.moveDirection.x * this.GRID_SIZE;
       this.targetPosition.y =
         this.position.y + this.moveDirection.y * this.GRID_SIZE;
-      this.moving = true;
     }
   }
 
