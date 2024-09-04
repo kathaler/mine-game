@@ -23,8 +23,9 @@ jspm_packages/
 *.njsproj
 *.sln
 
-# Optional npm cache directory
-.npm/
+# Optional pnpm cache directory
+.pnpm/
+pnpm-lock.yaml
 
 # Other
 .DS_Store
