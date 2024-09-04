@@ -29,12 +29,14 @@ class Grid {
   drawGrid(p) {
    p.push();
    p.stroke(75);
+
+   const extra = this.GRID_SIZE * 2;
  
    const { x: playerX, y: playerY } = this.PLAYER.position;
-   const viewLeft = (playerX - p.width / 2) - this.GRID_SIZE;
-   const viewRight = (playerX + p.width / 2) + this.GRID_SIZE;
-   const viewTop = (playerY - p.height / 2) - this.GRID_SIZE;
-   const viewBottom = (playerY + p.height / 2) + this.GRID_SIZE;
+   const viewLeft = (playerX - p.width / 2) - extra;
+   const viewRight = (playerX + p.width / 2) + extra;
+   const viewTop = (playerY - p.height / 2) - extra;
+   const viewBottom = (playerY + p.height / 2) + extra;
  
    for (const tile of this.tiles) {
      if (tile.x + this.GRID_SIZE >= viewLeft && tile.x <= viewRight &&
@@ -86,7 +88,8 @@ class Grid {
   }
 
   generateNewTiles(viewLeft, viewRight, viewTop, viewBottom) {
-   for (let x = viewLeft; x <= viewRight+this.GRID_SIZE; x += this.GRID_SIZE) {
+   const extra = this.GRID_SIZE * 2;
+   for (let x = viewLeft; x <= viewRight+extra; x += this.GRID_SIZE) {
      if (!this.isTileMinedOrDoesTileExist(x, viewTop - this.GRID_SIZE)) {
        const tile = new Tile(x, viewTop - this.GRID_SIZE, this.GRID_SIZE);
        this.tiles.push(tile);
@@ -97,7 +100,7 @@ class Grid {
      }
    }
 
-   for (let y = viewTop; y <= viewBottom+this.GRID_SIZE; y += this.GRID_SIZE) {
+   for (let y = viewTop; y <= viewBottom+extra; y += this.GRID_SIZE) {
      if (!this.isTileMinedOrDoesTileExist(viewLeft - this.GRID_SIZE, y)) {
        const tile = new Tile(viewLeft - this.GRID_SIZE, y, this.GRID_SIZE);
        this.tiles.push(tile);
