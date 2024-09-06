@@ -9,11 +9,14 @@ const App = () => {
 
   useEffect(() => {
     const sketch = (p) => {
-      const GAME_WIDTH = document.documentElement.clientWidth;
-      const GAME_HEIGHT = document.documentElement.clientHeight;
       const GRID_SIZE = 64;
       const SPEED = 8;
 
+      // const GAME_WIDTH = Math.floor(document.documentElement.clientWidth/GRID_SIZE);
+      // const GAME_HEIGHT = Math.floor(document.documentElement.clientHeight/GRID_SIZE);
+
+      const GAME_WIDTH = 20;
+      const GAME_HEIGHT = 10;
       const game = new Game(GAME_WIDTH, GAME_HEIGHT, GRID_SIZE, SPEED);
 
       p.setup = () => game.setup(p);
