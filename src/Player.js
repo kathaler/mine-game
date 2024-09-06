@@ -3,8 +3,8 @@ class Player {
     this.GRID_SIZE = GRID_SIZE;
     this.SPEED = SPEED;
 
-    this.position = { x: 10*GRID_SIZE, y: 10*GRID_SIZE };
-    this.targetPosition = { x: 10*GRID_SIZE, y: 10*GRID_SIZE };
+    this.position = { x: 0, y: 0 };
+    this.targetPosition = { x: 0, y: 0 };
     this.moveDirection = { x: 0, y: 0 };
     this.playerSize = GRID_SIZE/2;
   }
@@ -13,7 +13,7 @@ class Player {
     return (
       this.position.x % this.GRID_SIZE === 0 &&
       this.position.y % this.GRID_SIZE === 0
-    );
+    );w
   }
 
   isKeyPressed() {

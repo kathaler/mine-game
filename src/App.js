@@ -1,4 +1,3 @@
-// App.js
 import React, { useEffect, useRef } from "react";
 import p5 from "p5";
 import Game from "./Game";
@@ -9,15 +8,14 @@ const App = () => {
 
   useEffect(() => {
     const sketch = (p) => {
-      const GAME_WIDTH = document.documentElement.clientWidth;
-      const GAME_HEIGHT = document.documentElement.clientHeight;
       const GRID_SIZE = 64;
       const SPEED = 8;
-
+      const GAME_WIDTH = 26;
+      const GAME_HEIGHT = 14;
       const game = new Game(GAME_WIDTH, GAME_HEIGHT, GRID_SIZE, SPEED);
 
-      p.setup = () => game.setup(p);
-      p.windowResized = () => game.windowResized(p);
+      p.setup = () => game.setup(p, sketchRef);
+      p.windowResized = () => game.windowResized(p, sketchRef);
       p.draw = () => game.draw(p);
       p.keyPressed = () => game.keyPressed(p);
       p.keyReleased = () => game.keyReleased(p);
@@ -29,7 +27,12 @@ const App = () => {
     };
   }, []);
 
-  return <div ref={sketchRef} id="sketch-container"></div>;
+  return (
+    <div className="app-container">
+      <header className="header">Header</header>
+      <div className="sketch-container" ref={sketchRef}></div>
+    </div>
+  );
 };
 
 export default App;

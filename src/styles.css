@@ -5,8 +5,38 @@ body {
    width: 100%;
    height: 100%;
  }
- 
- #root, #sketch-container {
+
+ #root, .sketch-container {
    width: 100%;
    height: 100%;
+ }
+
+ .app-container {
+   display: flex;
+   flex-direction: column;
+   height: 100vh;
+   justify-content: center; /* Centers the game vertically */
+   align-items: center;     /* Centers the game horizontally */
+   background-color: #000;  /* Background outside the game area */
+ }
+ 
+ .header {
+   height: 50px;
+   width: 100%;
+   background-color: #333;
+   color: white;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   position: absolute;
+   top: 0;
+ }
+ 
+ .sketch-container {
+   width: 1280px;   /* Fixed width (change to your desired size) */
+   height: 720px;   /* Fixed height (change to your desired size) */
+   background-color: lightgray;
+   display: flex;
+   justify-content: center;
+   align-items: center;
  }
