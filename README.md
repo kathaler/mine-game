@@ -1,1 +1,1 @@
-[Link to game](https://kathaler.github.io/mine-game/)
+[Link to game](https://kathaler.github.io/mining-game/)
