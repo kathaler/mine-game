@@ -47,6 +47,7 @@ class Game {
   }
 
   draw(p) {
+   const deltaTime = p.deltaTime;
     p.background(135, 206, 235);
 
     // Calculate the target camera position (centered on the player)
@@ -62,7 +63,7 @@ class Game {
 
     p.translate(-this.camera.position.x, -this.camera.position.y);
 
-    this.grid.updateGrid(p);
+    this.grid.updateGrid(p, deltaTime);
     this.player.update(p);
     this.player.draw(p);
   }

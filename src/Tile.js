@@ -6,6 +6,8 @@ class Tile {
       this.size = size;
       this.isMined = false;
       this.coords = new Coordinates(x, y, size);
+      this.mineProgress = 0;
+      this.timeToMine = 1000;
    }
 
    draw(p) {
@@ -23,6 +25,18 @@ class Tile {
 
       p.textAlign(p.CENTER, p.CENTER);
       p.text(gridPosition.x + "," + gridPosition.y, textX, textY);
+   }
+
+   updateMiningProgress(deltaTime) {
+      if (this.isMined) {
+         return;
+      }
+
+      this.mineProgress += deltaTime;
+
+      if (this.mineProgress >= this.timeToMine) {
+         this.mine();
+      }
    }
 
    mine() {

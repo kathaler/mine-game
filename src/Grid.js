@@ -46,7 +46,7 @@ class Grid {
     p.pop();
   }
 
-  updateGrid(p) {
+  updateGrid(p, deltaTime) {
     const { x: playerX, y: playerY } = convertToScreenPosition(
       this.PLAYER.position.x,
       this.PLAYER.position.y,
@@ -59,11 +59,12 @@ class Grid {
     const viewBottom = Math.floor(playerY + this.height / 2);
 
     this.generateNewTiles(viewLeft, viewRight, viewTop, viewBottom);
-    this.removeTouchedTiles(playerX, playerY);
+    this.removeTouchedTiles(playerX, playerY, deltaTime);
     this.drawGrid(p, viewLeft, viewRight, viewTop, viewBottom);
   }
 
-  removeTouchedTiles(playerX, playerY) {
+  removeTouchedTiles(playerX, playerY, deltaTime) {
+   let isMining = false;
     const playerLeft = playerX;
     const playerRight = playerX + 1;
     const playerTop = playerY;
@@ -80,10 +81,13 @@ class Grid {
       const overlapX = playerRight > tileLeft && playerLeft < tileRight;
       const overlapY = playerBottom > tileTop && playerTop < tileBottom;
 
-      if (overlapX && overlapY && !tile.isMined) {
-        tile.mine();
+      if (overlapX && overlapY && !tile.isMined && this.PLAYER.isKeyPressed()) { 
+        isMining = true;
+        tile.updateMiningProgress(deltaTime);   
       }
     }
+
+    this.PLAYER.isMining = isMining;
   }
 
   generateNewTiles(viewLeft, viewRight, viewTop, viewBottom) {
