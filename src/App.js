@@ -10,8 +10,8 @@ const App = () => {
     const sketch = (p) => {
       const GRID_SIZE = 64;
       const SPEED = 8;
-      const GAME_WIDTH = 20;
-      const GAME_HEIGHT = 10;
+      const GAME_WIDTH = 26;
+      const GAME_HEIGHT = 14;
       const game = new Game(GAME_WIDTH, GAME_HEIGHT, GRID_SIZE, SPEED);
 
       p.setup = () => game.setup(p, sketchRef);
