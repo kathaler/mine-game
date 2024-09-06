@@ -18,20 +18,21 @@ class Game {
       this.offSetY = (this.GAME_HEIGHT * this.GRID_SIZE) / 2;
   }
 
-  setup(p) {
-    p.createCanvas(document.documentElement.clientWidth, document.documentElement.clientHeight);
-    p.background(135, 206, 235);
-    this.grid.initializeGrid();
-
-    this.camera.position = { x: this.player.position.x - this.offSetX, y: this.player.position.y - this.offSetY };
+  setup(p, sketchRef) {
+   const { clientWidth, clientHeight } = sketchRef.current;
+   p.createCanvas(clientWidth, clientHeight);
+   p.background(135, 206, 235);
+   this.grid.initializeGrid();
+ 
+   this.camera.position = { x: this.player.position.x - this.offSetX, y: this.player.position.y - this.offSetY };
    this.camera.targetPosition = { x: this.player.position.x - this.offSetX, y: this.player.position.y - this.offSetY };
-  }
-
-  windowResized(p) {
-    this.GAME_WIDTH = window.innerWidth;
-    this.GAME_HEIGHT = window.innerHeight;
-    p.resizeCanvas(this.GAME_WIDTH, this.GAME_HEIGHT);
-  }
+ }
+ 
+ windowResized(p, sketchRef) {
+   const { clientWidth, clientHeight } = sketchRef.current;
+   p.resizeCanvas(clientWidth, clientHeight);
+ }
+ 
 
   draw(p) {
     p.background(135, 206, 235);
