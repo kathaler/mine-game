@@ -47,11 +47,14 @@ class Grid {
   }
 
   updateGrid(p) {
+    const deltaTime = p.deltaTime;
     const { x: playerX, y: playerY } = convertToScreenPosition(
       this.PLAYER.position.x,
       this.PLAYER.position.y,
       this.GRID_SIZE
     );
+
+    this.checkPlayerMining(playerX, playerY, deltaTime);
 
     const viewLeft = Math.floor(playerX - this.width / 2);
     const viewRight = Math.floor(playerX + this.width / 2);
@@ -59,31 +62,26 @@ class Grid {
     const viewBottom = Math.floor(playerY + this.height / 2);
 
     this.generateNewTiles(viewLeft, viewRight, viewTop, viewBottom);
-    this.removeTouchedTiles(playerX, playerY);
+
     this.drawGrid(p, viewLeft, viewRight, viewTop, viewBottom);
   }
 
-  removeTouchedTiles(playerX, playerY) {
-    const playerLeft = playerX;
-    const playerRight = playerX + 1;
-    const playerTop = playerY;
-    const playerBottom = playerY + 1;
+  checkPlayerMining(playerX, playerY, deltaTime) {
+    if (this.PLAYER.isKeyPressed()) {
+      const moveDirection = this.PLAYER.moveDirection;
+      const xTile = playerX + moveDirection.x;
+      const yTile = playerY + moveDirection.y;
 
-    for (const [key, tile] of this.tiles.entries()) {
-      const gridPosition = tile.coords.gridPosition();
-
-      const tileLeft = gridPosition.x;
-      const tileRight = gridPosition.x + 1;
-      const tileTop = gridPosition.y;
-      const tileBottom = gridPosition.y + 1;
-
-      const overlapX = playerRight > tileLeft && playerLeft < tileRight;
-      const overlapY = playerBottom > tileTop && playerTop < tileBottom;
-
-      if (overlapX && overlapY && !tile.isMined) {
-        tile.mine();
+      const tile = this.tiles.get(`${xTile},${yTile}`);
+      if (this.isPlayerTouchingTile(tile)) {
+        this.PLAYER.isMining = true;
+        tile.updateMiningProgress(deltaTime);
       }
     }
+  }
+
+  isPlayerTouchingTile(tile) {
+    return tile && !tile.isMined;
   }
 
   generateNewTiles(viewLeft, viewRight, viewTop, viewBottom) {
