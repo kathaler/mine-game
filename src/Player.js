@@ -8,6 +8,8 @@ class Player {
     this.moveDirection = { x: 0, y: 0 };
     this.playerSize = GRID_SIZE / 2;
     this.isMining = false;
+
+    this.activeKeys = new Set();
   }
 
   isCenteredOnGrid() {
@@ -15,7 +17,6 @@ class Player {
       this.position.x % this.GRID_SIZE === 0 &&
       this.position.y % this.GRID_SIZE === 0
     );
-    w;
   }
 
   isKeyPressed() {
@@ -24,6 +25,15 @@ class Player {
 
   update(p) {
     if (!this.isMining) {
+      if (this.isCenteredOnGrid()) {
+        if (this.isKeyPressed()) {
+          this.targetPosition.x =
+            this.position.x + this.moveDirection.x * this.GRID_SIZE;
+          this.targetPosition.y =
+            this.position.y + this.moveDirection.y * this.GRID_SIZE;
+        }
+      }
+
       const distanceX = this.targetPosition.x - this.position.x;
       const distanceY = this.targetPosition.y - this.position.y;
 
@@ -32,11 +42,6 @@ class Player {
           Math.sign(distanceX) * Math.min(this.SPEED, Math.abs(distanceX));
         this.position.y +=
           Math.sign(distanceY) * Math.min(this.SPEED, Math.abs(distanceY));
-      }
-
-      if (this.isCenteredOnGrid() && this.isKeyPressed()) {
-        this.targetPosition.x += this.moveDirection.x * this.GRID_SIZE;
-        this.targetPosition.y += this.moveDirection.y * this.GRID_SIZE;
       }
     }
   }
@@ -51,33 +56,39 @@ class Player {
   }
 
   handleKeyPressed(p) {
-    if (p.key === "a") {
-      this.moveDirection.x -= 1;
-    }
-    if (p.key === "d") {
-      this.moveDirection.x += 1;
-    }
-    if (p.key === "w") {
-      this.moveDirection.y -= 1;
-    }
-    if (p.key === "s") {
-      this.moveDirection.y += 1;
-    }
+    this.activeKeys.add(p.key);
+    this.updateMoveDirection();
   }
 
   handleKeyReleased(p) {
-    if (p.key === "a") {
-      this.moveDirection.x += 1;
+    this.activeKeys.delete(p.key);
+    this.updateMoveDirection();
+  }
+
+  updateMoveDirection() {
+    this.moveDirection.x = 0;
+    this.moveDirection.y = 0;
+
+    if (this.activeKeys.has("a") && !this.activeKeys.has("d")) {
+      this.moveDirection.x = -1;
+    } else if (this.activeKeys.has("d") && !this.activeKeys.has("a")) {
+      this.moveDirection.x = 1;
     }
-    if (p.key == "d") {
-      this.moveDirection.x -= 1;
+
+    if (this.activeKeys.has("w") && !this.activeKeys.has("s")) {
+      this.moveDirection.y = -1;
+    } else if (this.activeKeys.has("s") && !this.activeKeys.has("w")) {
+      this.moveDirection.y = 1;
     }
-    if (p.key === "w") {
-      this.moveDirection.y += 1;
+
+    if (!this.isKeyPressed()) {
+      this.isMining = false;
     }
-    if (p.key === "s") {
-      this.moveDirection.y -= 1;
-    }
+  }
+
+  clampMoveDirection() {
+    this.moveDirection.x = Math.max(-1, Math.min(1, this.moveDirection.x));
+    this.moveDirection.y = Math.max(-1, Math.min(1, this.moveDirection.y));
   }
 }
 
