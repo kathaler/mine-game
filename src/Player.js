@@ -6,68 +6,89 @@ class Player {
     this.position = { x: 0, y: 0 };
     this.targetPosition = { x: 0, y: 0 };
     this.moveDirection = { x: 0, y: 0 };
-    this.playerSize = GRID_SIZE/2;
+    this.playerSize = GRID_SIZE / 2;
+    this.isMining = false;
+
+    this.activeKeys = new Set();
   }
 
   isCenteredOnGrid() {
     return (
       this.position.x % this.GRID_SIZE === 0 &&
       this.position.y % this.GRID_SIZE === 0
-    );w
+    );
   }
 
   isKeyPressed() {
-      return this.moveDirection.x !== 0 || this.moveDirection.y !== 0;
+    return this.moveDirection.x !== 0 || this.moveDirection.y !== 0;
   }
 
   update(p) {
-   const distanceX = this.targetPosition.x - this.position.x;
-   const distanceY = this.targetPosition.y - this.position.y;
+    if (!this.isMining) {
+      if (this.isCenteredOnGrid()) {
+        if (this.isKeyPressed()) {
+          this.targetPosition.x =
+            this.position.x + this.moveDirection.x * this.GRID_SIZE;
+          this.targetPosition.y =
+            this.position.y + this.moveDirection.y * this.GRID_SIZE;
+        }
+      }
 
-   if (Math.abs(distanceX) > 0 || Math.abs(distanceY) > 0) {
-       this.position.x += Math.sign(distanceX) * Math.min(this.SPEED, Math.abs(distanceX));
-       this.position.y += Math.sign(distanceY) * Math.min(this.SPEED, Math.abs(distanceY));
-   } 
+      const distanceX = this.targetPosition.x - this.position.x;
+      const distanceY = this.targetPosition.y - this.position.y;
 
-   if (this.isCenteredOnGrid() && this.isKeyPressed()) {
-       this.targetPosition.x += this.moveDirection.x * this.GRID_SIZE;
-       this.targetPosition.y += this.moveDirection.y * this.GRID_SIZE;
-   }
-}
+      if (Math.abs(distanceX) > 0 || Math.abs(distanceY) > 0) {
+        this.position.x +=
+          Math.sign(distanceX) * Math.min(this.SPEED, Math.abs(distanceX));
+        this.position.y +=
+          Math.sign(distanceY) * Math.min(this.SPEED, Math.abs(distanceY));
+      }
+    }
+  }
 
   draw(p) {
     p.fill(255, 204, 0);
-    p.square(this.position.x + this.playerSize/2, this.position.y + this.playerSize/2, this.playerSize);
+    p.square(
+      this.position.x + this.playerSize / 2,
+      this.position.y + this.playerSize / 2,
+      this.playerSize
+    );
   }
 
   handleKeyPressed(p) {
-    if (p.key === "a") {
-      this.moveDirection.x -= 1;
-    }
-    if (p.key === "d") {
-      this.moveDirection.x += 1;
-    }
-    if (p.key === "w") {
-      this.moveDirection.y -= 1;
-    }
-    if (p.key === "s") {
-      this.moveDirection.y += 1;
-    }
+    this.activeKeys.add(p.key);
+    this.updateMoveDirection();
   }
 
   handleKeyReleased(p) {
-    if (p.key === "a") {
-      this.moveDirection.x += 1;
+    this.activeKeys.delete(p.key);
+    this.updateMoveDirection();
+  }
+
+  updateMoveDirection() {
+    this.moveDirection.x = 0;
+    this.moveDirection.y = 0;
+
+    if (this.activeKeys.has("a") && !this.activeKeys.has("d")) {
+      this.moveDirection.x = -1;
+    } else if (this.activeKeys.has("d") && !this.activeKeys.has("a")) {
+      this.moveDirection.x = 1;
     }
-    if (p.key == "d") {
-      this.moveDirection.x -= 1;
+
+    if (this.activeKeys.has("w") && !this.activeKeys.has("s")) {
+      this.moveDirection.y = -1;
+    } else if (this.activeKeys.has("s") && !this.activeKeys.has("w")) {
+      this.moveDirection.y = 1;
     }
-    if (p.key === "w") {
-      this.moveDirection.y += 1;
+
+    if (!this.isKeyPressed()) {
+      this.isMining = false;
     }
-    if (p.key === "s") {
-      this.moveDirection.y -= 1;
-    }
+  }
+
+  clampMoveDirection() {
+    this.moveDirection.x = Math.max(-1, Math.min(1, this.moveDirection.x));
+    this.moveDirection.y = Math.max(-1, Math.min(1, this.moveDirection.y));
   }
 }
 

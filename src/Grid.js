@@ -13,7 +13,6 @@ class Grid {
   }
 
   initializeGrid() {
-    // Generate the grid only once
     const startX = this.PLAYER.position.x - 2;
     const endX = this.PLAYER.position.x + 2;
     const startY = this.PLAYER.position.y - 2;
@@ -47,10 +46,17 @@ class Grid {
   }
 
   updateGrid(p) {
+    const deltaTime = p.deltaTime;
     const { x: playerX, y: playerY } = convertToScreenPosition(
       this.PLAYER.position.x,
       this.PLAYER.position.y,
       this.GRID_SIZE
+    );
+
+    this.checkPlayerMining(playerX, playerY, deltaTime);
+    this.PLAYER.moveDirection = this.isMovementBlocked(
+      this.PLAYER.position,
+      this.PLAYER.moveDirection
     );
 
     const viewLeft = Math.floor(playerX - this.width / 2);
@@ -59,30 +65,66 @@ class Grid {
     const viewBottom = Math.floor(playerY + this.height / 2);
 
     this.generateNewTiles(viewLeft, viewRight, viewTop, viewBottom);
-    this.removeTouchedTiles(playerX, playerY);
+
     this.drawGrid(p, viewLeft, viewRight, viewTop, viewBottom);
   }
 
-  removeTouchedTiles(playerX, playerY) {
-    const playerLeft = playerX;
-    const playerRight = playerX + 1;
-    const playerTop = playerY;
-    const playerBottom = playerY + 1;
+  isMovementBlocked(playerPosition, moveDirection) {
+    const { x, y } = convertToScreenPosition(
+      playerPosition.x,
+      playerPosition.y,
+      this.GRID_SIZE
+    );
+    const { x: moveX, y: moveY } = moveDirection;
 
-    for (const [key, tile] of this.tiles.entries()) {
-      const gridPosition = tile.coords.gridPosition();
+    console.log(x, y, moveX, moveY);
 
-      const tileLeft = gridPosition.x;
-      const tileRight = gridPosition.x + 1;
-      const tileTop = gridPosition.y;
-      const tileBottom = gridPosition.y + 1;
+    if (moveX !== 0 && moveY !== 0) {
+      const horizontalTile = this.doesTileExist(x + moveX, y);
+      const verticalTile = this.doesTileExist(x, y + moveY);
 
-      const overlapX = playerRight > tileLeft && playerLeft < tileRight;
-      const overlapY = playerBottom > tileTop && playerTop < tileBottom;
-
-      if (overlapX && overlapY && !tile.isMined) {
-        tile.mine();
+      if (horizontalTile && verticalTile) {
+        return { x: moveX, y: 0 };
       }
+
+      if (horizontalTile) {
+        return { x: 0, y: moveY };
+      }
+
+      if (verticalTile) {
+        return { x: moveX, y: 0 };
+      }
+    }
+
+    return moveDirection;
+  }
+
+  checkPlayerMining(playerX, playerY, deltaTime) {
+    if (!this.PLAYER.isKeyPressed()) {
+      this.PLAYER.isMining = false;
+      return;
+    }
+
+    const { x, y } = this.PLAYER.moveDirection;
+    const miningDirection = x !== 0 && y !== 0 ? { x: 0, y } : { x, y };
+
+    if (miningDirection.x === 0 && miningDirection.y === 0) {
+      this.PLAYER.isMining = false;
+      return;
+    }
+
+    const xTile = playerX + miningDirection.x;
+    const yTile = playerY + miningDirection.y;
+    const tile = this.tiles.get(`${xTile},${yTile}`);
+
+    if (tile && !tile.isMined) {
+      this.PLAYER.isMining = true;
+      tile.updateMiningProgress(deltaTime);
+      if (tile.isMined) {
+        this.PLAYER.isMining = false;
+      }
+    } else {
+      this.PLAYER.isMining = false;
     }
   }
 
@@ -127,7 +169,7 @@ class Grid {
   }
 
   doesTileExist(x, y) {
-    return this.tiles.has(`${x},${y}`);
+    return this.tiles.has(`${x},${y}`) && !this.tiles.get(`${x},${y}`).isMined;
   }
 }
 
