@@ -80,8 +80,8 @@ class Grid {
     console.log(x, y, moveX, moveY);
 
     if (moveX !== 0 && moveY !== 0) {
-      const horizontalTile = this.doesTileExist(x + moveX, y);
-      const verticalTile = this.doesTileExist(x, y + moveY);
+      const horizontalTile = this.doesTileExistAndNotMined(x + moveX, y);
+      const verticalTile = this.doesTileExistAndNotMined(x, y + moveY);
 
       if (horizontalTile && verticalTile) {
         return { x: moveX, y: 0 };
@@ -169,6 +169,10 @@ class Grid {
   }
 
   doesTileExist(x, y) {
+    return this.tiles.has(`${x},${y}`);
+  }
+
+  doesTileExistAndNotMined(x, y) {
     return this.tiles.has(`${x},${y}`) && !this.tiles.get(`${x},${y}`).isMined;
   }
 }
