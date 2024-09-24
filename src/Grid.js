@@ -13,7 +13,6 @@ class Grid {
   }
 
   initializeGrid() {
-    // Generate the grid only once
     const startX = this.PLAYER.position.x - 2;
     const endX = this.PLAYER.position.x + 2;
     const startY = this.PLAYER.position.y - 2;
@@ -55,6 +54,10 @@ class Grid {
     );
 
     this.checkPlayerMining(playerX, playerY, deltaTime);
+    this.PLAYER.moveDirection = this.isMovementBlocked(
+      this.PLAYER.position,
+      this.PLAYER.moveDirection
+    );
 
     const viewLeft = Math.floor(playerX - this.width / 2);
     const viewRight = Math.floor(playerX + this.width / 2);
@@ -66,22 +69,63 @@ class Grid {
     this.drawGrid(p, viewLeft, viewRight, viewTop, viewBottom);
   }
 
-  checkPlayerMining(playerX, playerY, deltaTime) {
-    if (this.PLAYER.isKeyPressed()) {
-      const moveDirection = this.PLAYER.moveDirection;
-      const xTile = playerX + moveDirection.x;
-      const yTile = playerY + moveDirection.y;
+  isMovementBlocked(playerPosition, moveDirection) {
+    const { x, y } = convertToScreenPosition(
+      playerPosition.x,
+      playerPosition.y,
+      this.GRID_SIZE
+    );
+    const { x: moveX, y: moveY } = moveDirection;
 
-      const tile = this.tiles.get(`${xTile},${yTile}`);
-      if (this.isPlayerTouchingTile(tile)) {
-        this.PLAYER.isMining = true;
-        tile.updateMiningProgress(deltaTime);
+    console.log(x, y, moveX, moveY);
+
+    if (moveX !== 0 && moveY !== 0) {
+      const horizontalTile = this.doesTileExist(x + moveX, y);
+      const verticalTile = this.doesTileExist(x, y + moveY);
+
+      if (horizontalTile && verticalTile) {
+        return { x: moveX, y: 0 };
+      }
+
+      if (horizontalTile) {
+        return { x: 0, y: moveY };
+      }
+
+      if (verticalTile) {
+        return { x: moveX, y: 0 };
       }
     }
+
+    return moveDirection;
   }
 
-  isPlayerTouchingTile(tile) {
-    return tile && !tile.isMined;
+  checkPlayerMining(playerX, playerY, deltaTime) {
+    if (!this.PLAYER.isKeyPressed()) {
+      this.PLAYER.isMining = false;
+      return;
+    }
+
+    const { x, y } = this.PLAYER.moveDirection;
+    const miningDirection = x !== 0 && y !== 0 ? { x: 0, y } : { x, y };
+
+    if (miningDirection.x === 0 && miningDirection.y === 0) {
+      this.PLAYER.isMining = false;
+      return;
+    }
+
+    const xTile = playerX + miningDirection.x;
+    const yTile = playerY + miningDirection.y;
+    const tile = this.tiles.get(`${xTile},${yTile}`);
+
+    if (tile && !tile.isMined) {
+      this.PLAYER.isMining = true;
+      tile.updateMiningProgress(deltaTime);
+      if (tile.isMined) {
+        this.PLAYER.isMining = false;
+      }
+    } else {
+      this.PLAYER.isMining = false;
+    }
   }
 
   generateNewTiles(viewLeft, viewRight, viewTop, viewBottom) {
@@ -125,7 +169,7 @@ class Grid {
   }
 
   doesTileExist(x, y) {
-    return this.tiles.has(`${x},${y}`);
+    return this.tiles.has(`${x},${y}`) && !this.tiles.get(`${x},${y}`).isMined;
   }
 }
 
